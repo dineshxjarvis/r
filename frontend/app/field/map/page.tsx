@@ -1,3 +1,5 @@
-export default function Page() {
-  return <div></div>;
+import MineGisMapPage from '../../mine/map/page';
+
+export default function FieldGisMapPage() {
+  return <MineGisMapPage />;
 }

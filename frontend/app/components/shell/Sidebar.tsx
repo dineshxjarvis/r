@@ -18,7 +18,8 @@ import {
   Wrench,
   UserCheck,
   Briefcase,
-  ShieldCheck
+  ShieldCheck,
+  Settings
 } from 'lucide-react';
 
 interface SidebarProps {
@@ -72,8 +73,10 @@ export function Sidebar({
         { id: 'capas', label: 'CAPA Management', href: '/mine/capas', icon: ShieldCheck },
         { id: 'contractors', label: 'Contractors', href: '/mine/contractors', icon: Briefcase },
         { id: 'inspections', label: 'Inspections & Audit', href: '/mine/inspections', icon: Search },
-        { id: 'gis-map', label: 'GIS Mining Map', href: '/field/map', icon: MapPin },
-        { id: 'documents', label: 'Mine Documents', href: '/field/documents', icon: FileText },
+        { id: 'documents', label: 'Documents & Reports', href: '/mine/documents', icon: FileText },
+        { id: 'gis-map', label: 'GIS Mine Map', href: '/mine/map', icon: MapPin },
+        { id: 'grievances', label: 'Grievances', href: '/mine/grievances', icon: MessageSquare },
+        { id: 'settings', label: 'Mine Settings', href: '/mine/settings', icon: Settings },
         { id: 'notifications', label: 'Notifications', href: '#', icon: Bell, isNotificationTrigger: true },
       ];
     }
