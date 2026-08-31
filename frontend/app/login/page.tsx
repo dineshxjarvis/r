@@ -143,22 +143,33 @@ const ROLES_DATA: {
       {
         id: 'director-tech',
         name: 'Dr. N. K. Roy',
-        postTitle: 'Director (Technical) / Head of Safety',
+        postTitle: 'Director (Technical) / Area GM',
         department: 'SECL Corporate Headquarters',
-        scope: 'SECL Subsidiary (All Areas)',
+        scope: 'Korba Area & SECL Subsidiary',
         roleId: 'corporate',
-        route: '/field/dashboard',
+        route: '/corporate/dashboard',
         appointmentPeriod: '01 Nov 2022 – 31 Oct 2027',
         certNumber: 'DIR-HQ-SECL-2022-01'
       },
       {
+        id: 'compliance-team',
+        name: 'Shri K. L. Verma',
+        postTitle: 'Corporate Compliance Officer',
+        department: 'Subsidiary Regulatory & Legal Desk',
+        scope: 'SECL Subsidiary Portfolio',
+        roleId: 'corporate',
+        route: '/corporate/compliance-team',
+        appointmentPeriod: '01 Apr 2023 – 31 Mar 2028',
+        certNumber: 'COMP-HQ-2023-441'
+      },
+      {
         id: 'cmd-exec',
         name: 'Shri P. V. Rao',
-        postTitle: 'Corporate Executive / ESG Cell',
+        postTitle: 'Corporate Executive / Administration',
         department: 'Coal India Limited (CIL HQ)',
-        scope: 'National Coal Operations',
+        scope: 'SECL Subsidiary Tenancy',
         roleId: 'corporate',
-        route: '/field/documents',
+        route: '/corporate/admin',
         appointmentPeriod: '01 Jun 2024 – 31 May 2029',
         certNumber: 'CIL-HQ-2024-009'
       }
@@ -176,7 +187,7 @@ const ROLES_DATA: {
         department: 'Directorate General of Mines Safety',
         scope: 'Central Zone (Bilaspur)',
         roleId: 'regulatory',
-        route: '/field/inspections',
+        route: '/regulatory/dashboard',
         appointmentPeriod: '01 Aug 2024 – 31 Jul 2028',
         certNumber: 'DGMS-GOI-CENTRAL-003'
       },
@@ -187,9 +198,38 @@ const ROLES_DATA: {
         department: 'Ministry of Environment, Forest & Climate Change',
         scope: 'Central Regional Office (Raipur)',
         roleId: 'regulatory',
-        route: '/field/obligations',
+        route: '/regulatory/moefcc',
         appointmentPeriod: '01 Jan 2024 – 31 Dec 2026',
         certNumber: 'MOEFCC-REG-2024-81'
+      }
+    ]
+  },
+  {
+    id: 'contractor',
+    title: 'Role 5: Contractors (Part B)',
+    subtitle: 'Contractor Administrator & Supervisor — own workers & engagement only',
+    personae: [
+      {
+        id: 'contractor-admin',
+        name: 'Shri R. K. Gupta',
+        postTitle: 'Contractor Administrator',
+        department: 'Acme Mining Services Pvt. Ltd.',
+        scope: 'SECL/KRB/OB-REMOVAL/2026/17',
+        roleId: 'contractor',
+        route: '/contractor/dashboard',
+        appointmentPeriod: '01 Oct 2026 – 31 Mar 2027',
+        certNumber: 'CONT-SECL-2026-0341'
+      },
+      {
+        id: 'contractor-supervisor',
+        name: 'Shri D. V. Patil',
+        postTitle: 'Contractor Site Supervisor',
+        department: 'Acme Mining Services Pvt. Ltd.',
+        scope: 'Gevra OCP (OB-REM-PKG-03)',
+        roleId: 'contractor',
+        route: '/contractor/workers',
+        appointmentPeriod: '01 Oct 2026 – 31 Mar 2027',
+        certNumber: 'CONT-SECL-2026-0342'
       }
     ]
   }
@@ -197,7 +237,7 @@ const ROLES_DATA: {
 
 export default function LoginPage() {
   const router = useRouter();
-  const [activeRoleTab, setActiveRoleTab] = useState<'field' | 'mine' | 'corporate' | 'regulatory'>('field');
+  const [activeRoleTab, setActiveRoleTab] = useState<'field' | 'mine' | 'corporate' | 'regulatory' | 'contractor'>('field');
   const [selectedPersona, setSelectedPersona] = useState<Persona>(ROLES_DATA[0].personae[0]);
   const [employeeId, setEmployeeId] = useState('EMP-789021');
   const [password, setPassword] = useState('••••••••••••');

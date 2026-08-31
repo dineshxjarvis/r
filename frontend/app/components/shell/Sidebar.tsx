@@ -19,7 +19,10 @@ import {
   UserCheck,
   Briefcase,
   ShieldCheck,
-  Settings
+  Settings,
+  Activity,
+  Scale,
+  Brain
 } from 'lucide-react';
 
 interface SidebarProps {
@@ -39,7 +42,8 @@ export function Sidebar({
     name: 'Er. Rajesh Verma',
     postTitle: 'Safety Officer',
     scope: 'Gevra OCP (SECL)',
-    appointmentPeriod: '01 Apr 2024 – 31 Mar 2027'
+    appointmentPeriod: '01 Apr 2024 – 31 Mar 2027',
+    roleId: 'field'
   });
 
   const loadPersona = () => {
@@ -65,6 +69,84 @@ export function Sidebar({
 
   // Determine Nav Items based on Active End-User Persona (strictly unique hrefs)
   const getNavItems = () => {
+    if (persona.id === 'contractor-supervisor') {
+      return [
+        { id: 'workers', label: 'Workers (My Package)', href: '/contractor/workers', icon: Users },
+        { id: 'packages', label: 'Work Package (My PKG)', href: '/contractor/packages', icon: Folder },
+        { id: 'compliance', label: 'Compliance Register', href: '/contractor/compliance', icon: ClipboardList },
+        { id: 'documents', label: 'Documents', href: '/contractor/documents', icon: FileText },
+        { id: 'grievances', label: 'Grievances', href: '/contractor/grievances', icon: MessageSquare },
+        { id: 'notifications', label: 'Notifications', href: '#', icon: Bell, isNotificationTrigger: true },
+      ];
+    }
+
+    if (persona.roleId === 'contractor' || persona.id === 'contractor-admin' || persona.id === 'contractor-supervisor') {
+      return [
+        { id: 'dashboard', label: 'Contractor Dashboard', href: '/contractor/dashboard', icon: Briefcase },
+        { id: 'packages', label: 'Work Packages', href: '/contractor/packages', icon: Folder },
+        { id: 'workers', label: 'Workers', href: '/contractor/workers', icon: Users },
+        { id: 'compliance', label: 'Compliance Register', href: '/contractor/compliance', icon: ClipboardList },
+        { id: 'documents', label: 'Documents', href: '/contractor/documents', icon: FileText },
+        { id: 'grievances', label: 'Grievances', href: '/contractor/grievances', icon: MessageSquare },
+        { id: 'notifications', label: 'Notifications', href: '#', icon: Bell, isNotificationTrigger: true },
+      ];
+    }
+
+    if (persona.id === 'moefcc-reg') {
+      return [
+        { id: 'dashboard', label: 'EC Overview Dashboard', href: '/regulatory/moefcc', icon: Leaf },
+        { id: 'inspections', label: 'EC Inspections', href: '/regulatory/inspections', icon: Search },
+        { id: 'findings', label: 'Findings Issued', href: '/regulatory/findings', icon: AlertTriangle },
+        { id: 'obligations', label: 'EC Obligation Register', href: '/regulatory/obligations', icon: ClipboardList },
+        { id: 'cases', label: 'Cases & Proceedings', href: '/regulatory/cases', icon: Scale },
+        { id: 'map', label: 'Jurisdiction Map (EC)', href: '/regulatory/map', icon: MapPin },
+        { id: 'instruments', label: 'Instruments & Orders', href: '/regulatory/instruments', icon: FileText },
+        { id: 'notifications', label: 'Notifications', href: '#', icon: Bell, isNotificationTrigger: true },
+      ];
+    }
+
+    if (persona.roleId === 'regulatory' || persona.id === 'dgms-director' || persona.id === 'moefcc-reg') {
+      return [
+        { id: 'dashboard', label: 'Regulatory Dashboard', href: '/regulatory/dashboard', icon: Home },
+        { id: 'inspections', label: 'Inspections (Mine)', href: '/regulatory/inspections', icon: Search },
+        { id: 'findings', label: 'Findings Issued', href: '/regulatory/findings', icon: AlertTriangle },
+        { id: 'obligations', label: 'Obligation Register', href: '/regulatory/obligations', icon: ClipboardList },
+        { id: 'cases', label: 'Cases & Proceedings', href: '/regulatory/cases', icon: Scale },
+        { id: 'map', label: 'Jurisdiction Map', href: '/regulatory/map', icon: MapPin },
+        { id: 'instruments', label: 'Instruments & Orders', href: '/regulatory/instruments', icon: FileText },
+        { id: 'notifications', label: 'Notifications', href: '#', icon: Bell, isNotificationTrigger: true },
+      ];
+    }
+
+    if (persona.id === 'compliance-team') {
+      return [
+        { id: 'dashboard', label: 'Compliance Dashboard', href: '/corporate/compliance-team', icon: Brain },
+        { id: 'documents', label: 'Document Intelligence', href: '/corporate/documents', icon: FileText },
+        { id: 'compliance', label: 'Compliance Portfolio', href: '/corporate/compliance', icon: ClipboardList },
+        { id: 'obligations', label: 'Obligations Registry', href: '/corporate/obligations', icon: Folder },
+        { id: 'findings', label: 'Findings Registry', href: '/corporate/findings', icon: AlertTriangle },
+        { id: 'analytics', label: 'Analytics & AI Insights', href: '/corporate/analytics', icon: Activity },
+        { id: 'admin', label: 'Administration', href: '/corporate/admin', icon: Settings },
+        { id: 'notifications', label: 'Notifications', href: '#', icon: Bell, isNotificationTrigger: true },
+      ];
+    }
+
+    if (persona.id === 'director-tech' || persona.id === 'cmd-exec' || persona.roleId === 'corporate') {
+      return [
+        { id: 'dashboard', label: 'Portfolio Dashboard', href: '/corporate/dashboard', icon: Home },
+        { id: 'compliance', label: 'Compliance Portfolio', href: '/corporate/compliance', icon: ClipboardList },
+        { id: 'inspections', label: 'Inspections', href: '/corporate/inspections', icon: Search },
+        { id: 'findings', label: 'Findings Registry', href: '/corporate/findings', icon: AlertTriangle },
+        { id: 'analytics', label: 'Analytics & AI Insights', href: '/corporate/analytics', icon: Activity },
+        { id: 'reports', label: 'Reports & Filings', href: '/corporate/reports', icon: FileText },
+        { id: 'contractors', label: 'Contractors', href: '/corporate/contractors', icon: Briefcase },
+        { id: 'regulatory-cases', label: 'Regulatory Cases', href: '/corporate/regulatory-cases', icon: Scale },
+        { id: 'obligations', label: 'Obligations Registry', href: '/corporate/obligations', icon: Folder },
+        { id: 'admin', label: 'Administration', href: '/corporate/admin', icon: Settings },
+        { id: 'notifications', label: 'Notifications', href: '#', icon: Bell, isNotificationTrigger: true },
+      ];
+    }
+
     if (persona.id === 'mine-manager') {
       return [
         { id: 'dashboard', label: 'Mine Dashboard', href: '/mine/dashboard', icon: Home },
@@ -187,10 +269,13 @@ export function Sidebar({
                 pathname === item.href ||
                 (item.href !== '/field/dashboard' &&
                  item.href !== '/mine/dashboard' &&
+                 item.href !== '/corporate/dashboard' &&
+                 item.href !== '/regulatory/dashboard' &&
                  item.href !== '/field/safety/dashboard' &&
                  item.href !== '/field/environment' &&
                  item.href !== '/field/attendance' &&
                  item.href !== '/field/assets' &&
+                 item.href !== '/corporate/compliance-team' &&
                  pathname?.startsWith(item.href))
               );
 
