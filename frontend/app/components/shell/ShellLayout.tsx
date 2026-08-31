@@ -21,7 +21,7 @@ export function ShellLayout({ children }: ShellLayoutProps) {
           isOpen={isSidebarOpen}
           onClose={() => setIsSidebarOpen(false)}
           activeItem={activeItem}
-          onSelectItem={(id) => setActiveItem(id)}
+          onSelectItem={(id: string) => setActiveItem(id)}
         />
 
         {/* Main Content Area */}

@@ -28,12 +28,16 @@ import {
 interface SidebarProps {
   isOpen: boolean;
   onClose: () => void;
+  activeItem?: string;
+  onSelectItem?: (id: string) => void;
   onOpenNotifications?: () => void;
 }
 
 export function Sidebar({
   isOpen,
   onClose,
+  activeItem,
+  onSelectItem,
   onOpenNotifications
 }: SidebarProps) {
   const pathname = usePathname();

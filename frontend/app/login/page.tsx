@@ -21,14 +21,14 @@ interface Persona {
   postTitle: string;
   department: string;
   scope: string;
-  roleId: 'field' | 'mine' | 'corporate' | 'regulatory';
+  roleId: 'field' | 'mine' | 'corporate' | 'regulatory' | 'contractor';
   route: string;
   appointmentPeriod: string;
   certNumber: string;
 }
 
 const ROLES_DATA: {
-  id: 'field' | 'mine' | 'corporate' | 'regulatory';
+  id: 'field' | 'mine' | 'corporate' | 'regulatory' | 'contractor';
   title: string;
   subtitle: string;
   personae: Persona[];
