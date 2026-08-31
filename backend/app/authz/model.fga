@@ -1,0 +1,2 @@
+# OpenFGA authorization model DSL. Types and relations per features/access-control/authorization-spec.md section 9.
+# Postgres stays canonical for who holds what; these tuples are a derived index.

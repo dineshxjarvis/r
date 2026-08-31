@@ -1,0 +1,1 @@
+"""Drift guards: parse the action tables out of docs/api-specs/endpoints/**.md and assert app.kernel.registry matches action names, capabilities, state preconditions, reason and version requirements, and effect lists."""
