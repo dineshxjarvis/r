@@ -2,49 +2,53 @@
 
 import React, { useState } from 'react';
 import Link from 'next/link';
-import { Upload, Search, Leaf, ArrowLeft } from 'lucide-react';
+import { Upload, Search, Users, ArrowLeft } from 'lucide-react';
 
-interface EnvDocItem {
+interface LabourDocItem {
   id: string;
-  category: 'EC & Conditions' | 'Consent (CTE/CTO)' | 'Forest Clearance' | 'My subs';
+  category: 'Statutory Registers' | 'Licences' | 'Wage Records' | 'Roster Approvals';
   title: string;
   badge?: string;
   fileSize?: string;
   uploadedDate?: string;
+  actionType: 'view' | 'upload';
 }
 
-const INITIAL_ENV_DOCS: EnvDocItem[] = [
+const INITIAL_LABOUR_DOCS: LabourDocItem[] = [
   {
-    id: 'DOC-EC-47',
-    category: 'EC & Conditions',
-    title: 'Environmental Clearance — Gevra OCP',
-    badge: '47 conditions',
-    fileSize: '5.6 MB',
-    uploadedDate: 'MoEFCC Order J-11015/85/2009-IA.II(M)'
+    id: 'DOC-FORM-11',
+    category: 'Statutory Registers',
+    title: 'Form 11 — Register of persons employed',
+    badge: 'Up to date',
+    fileSize: '3.8 MB',
+    uploadedDate: 'Mines Act 1952 Section 48',
+    actionType: 'view'
   },
   {
-    id: 'DOC-CTO-2027',
-    category: 'Consent (CTE/CTO)',
-    title: 'CTO — valid until 31 Mar 2027',
-    badge: 'Active Consent',
-    fileSize: '2.1 MB',
-    uploadedDate: 'CECB Order No. 4412/TS/CECB/2024'
+    id: 'DOC-CLRA-LIC',
+    category: 'Licences',
+    title: 'Contractor labour licence',
+    badge: 'Valid to 31 Dec',
+    fileSize: '1.5 MB',
+    uploadedDate: 'CLRA Act 1970 Licence #881',
+    actionType: 'view'
   },
   {
-    id: 'DOC-FC-STAGE2',
-    category: 'Forest Clearance',
-    title: 'FC Stage 2 application',
-    badge: 'Pending MoEFCC',
-    fileSize: '14.8 MB',
-    uploadedDate: 'State Forest Dept & MoEFCC'
+    id: 'DOC-WAGE-AUG',
+    category: 'Wage Records',
+    title: 'Monthly wages statement — Aug 2026',
+    badge: 'Due 05 Sep',
+    fileSize: 'Pending file',
+    uploadedDate: 'Payment of Wages (Mines) Rules',
+    actionType: 'upload'
   }
 ];
 
-const TABS = ['All', 'EC & Conditions', 'Consent (CTE/CTO)', 'Forest Clearance', 'My subs'] as const;
+const TABS = ['All', 'Statutory Registers', 'Licences', 'Wage Records', 'Roster Approvals'] as const;
 
-export default function EnvironmentalDocumentsPage() {
+export default function LabourDocumentsPage() {
   const [activeTab, setActiveTab] = useState<typeof TABS[number]>('All');
-  const [docs, setDocs] = useState<EnvDocItem[]>(INITIAL_ENV_DOCS);
+  const [docs, setDocs] = useState<LabourDocItem[]>(INITIAL_LABOUR_DOCS);
 
   const filteredDocs = docs.filter(doc => {
     if (activeTab !== 'All' && doc.category !== activeTab) return false;
@@ -52,23 +56,24 @@ export default function EnvironmentalDocumentsPage() {
   });
 
   const handleUpload = () => {
-    const name = prompt('Enter environmental clearance/monitoring document title:');
+    const name = prompt('Enter statutory labour register/document title:');
     if (name) {
-      const newDoc: EnvDocItem = {
-        id: `DOC-ENV-${Date.now()}`,
-        category: 'My subs',
+      const newDoc: LabourDocItem = {
+        id: `DOC-LABOUR-${Date.now()}`,
+        category: 'Statutory Registers',
         title: name,
         badge: 'New Upload',
-        fileSize: '1.5 MB',
-        uploadedDate: 'Submitted by Environmental Officer'
+        fileSize: '1.1 MB',
+        uploadedDate: 'Logged by Labour Officer',
+        actionType: 'view'
       };
       setDocs(prev => [newDoc, ...prev]);
-      alert(`Environmental document "${name}" uploaded to registry.`);
+      alert(`Labour document "${name}" logged to statutory registry.`);
     }
   };
 
-  const handleView = (doc: EnvDocItem) => {
-    alert(`Opening official clearance & compliance intelligence viewer for:\n${doc.title}`);
+  const handleView = (doc: LabourDocItem) => {
+    alert(`Opening official labour document viewer for:\n${doc.title}`);
   };
 
   return (
@@ -78,7 +83,7 @@ export default function EnvironmentalDocumentsPage() {
         <div className="space-y-1">
           <div className="flex items-center gap-2">
             <Link
-              href="/field/environment"
+              href="/field/attendance"
               className="inline-flex items-center gap-1 text-xs font-bold text-[#8B0000] hover:underline"
             >
               <ArrowLeft className="w-3.5 h-3.5" />
@@ -86,11 +91,11 @@ export default function EnvironmentalDocumentsPage() {
             </Link>
             <span className="text-slate-300">|</span>
             <h1 className="text-base font-bold text-slate-900">
-              Environmental Documents · Gevra OCP
+              Labour Documents · Gevra OCP
             </h1>
           </div>
           <div className="text-xs text-slate-600">
-            Official repository of EC letters, CTO consents, Stage 1/2 FC dockets, and lab returns
+            Mines Act 1952 statutory registers, contractor licences, and wage compliance statements
           </div>
         </div>
 
@@ -111,7 +116,6 @@ export default function EnvironmentalDocumentsPage() {
         
         {/* Top Filter Tabs matching wireframe */}
         <div className="p-3.5 bg-slate-100 border-b border-slate-300 space-y-2.5 text-xs">
-          {/* Category Tabs: [EC & Conditions] [Consent (CTE/CTO)] [Forest Clearance] [My subs] */}
           <div className="flex items-center gap-2 flex-wrap">
             {TABS.map((tab) => {
               const isSelected = activeTab === tab;
@@ -157,27 +161,38 @@ export default function EnvironmentalDocumentsPage() {
                   </span>
                 )}
 
-                <button
-                  onClick={() => handleView(item)}
-                  className="px-3 py-1 bg-white border border-slate-300 hover:bg-slate-100 text-xs font-semibold text-slate-900 rounded transition shrink-0"
-                >
-                  [View]
-                </button>
+                {item.actionType === 'view' ? (
+                  <button
+                    onClick={() => handleView(item)}
+                    className="px-3 py-1 bg-white border border-slate-300 hover:bg-slate-100 text-xs font-semibold text-slate-900 rounded transition shrink-0"
+                  >
+                    [View]
+                  </button>
+                ) : (
+                  <button
+                    onClick={() => {
+                      alert('Opening wages return PDF upload modal...');
+                    }}
+                    className="px-3 py-1 bg-[#8B0000] hover:bg-[#730000] text-white text-xs font-bold rounded transition shadow-xs shrink-0"
+                  >
+                    [Upload]
+                  </button>
+                )}
               </div>
             </div>
           ))}
 
           {filteredDocs.length === 0 && (
             <div className="p-6 text-center text-xs text-slate-500 font-medium">
-              No documents found matching the selected filter.
+              No labour documents found matching the selected filter.
             </div>
           )}
         </div>
 
         {/* Footer */}
         <div className="p-3 bg-slate-50 border-t border-slate-300 text-[11px] text-slate-600 flex items-center justify-between">
-          <span>PARIVESH & CECB Integrated Document Docket</span>
-          <span className="font-mono text-slate-500">MoEFCC Portal</span>
+          <span>Office of Chief Labour Commissioner (Central) Registry</span>
+          <span className="font-mono text-slate-500">Ministry of Labour & Employment</span>
         </div>
       </div>
     </div>

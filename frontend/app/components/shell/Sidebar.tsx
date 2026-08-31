@@ -1,6 +1,6 @@
 'use client';
 
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import {
@@ -11,7 +11,14 @@ import {
   Folder,
   MapPin,
   FileText,
-  Bell
+  Bell,
+  Leaf,
+  Users,
+  MessageSquare,
+  Wrench,
+  UserCheck,
+  Briefcase,
+  ShieldCheck
 } from 'lucide-react';
 
 interface SidebarProps {
@@ -20,23 +27,113 @@ interface SidebarProps {
   onOpenNotifications?: () => void;
 }
 
-const NAV_ITEMS = [
-  { id: 'dashboard', label: 'Dashboard (My Queue)', href: '/field/dashboard', icon: Home },
-  { id: 'inspections', label: 'Inspections', href: '/field/inspections', icon: Search },
-  { id: 'defects', label: 'Defects & Findings', href: '/field/findings', icon: AlertTriangle },
-  { id: 'obligations', label: 'Obligations', href: '/field/obligations', icon: ClipboardList },
-  { id: 'evidence', label: 'Evidence', href: '/field/safety/documents', icon: Folder },
-  { id: 'gis-map', label: 'GIS Map', href: '/field/map', icon: MapPin },
-  { id: 'documents', label: 'Documents', href: '/field/documents', icon: FileText },
-  { id: 'notifications', label: 'Notifications', href: '#', icon: Bell, isNotificationTrigger: true },
-];
-
 export function Sidebar({
   isOpen,
   onClose,
   onOpenNotifications
 }: SidebarProps) {
   const pathname = usePathname();
+  const [persona, setPersona] = useState({
+    id: 'safety-officer',
+    name: 'Er. Rajesh Verma',
+    postTitle: 'Safety Officer',
+    scope: 'Gevra OCP (SECL)',
+    appointmentPeriod: '01 Apr 2024 – 31 Mar 2027'
+  });
+
+  const loadPersona = () => {
+    try {
+      const saved = localStorage.getItem('strata_current_persona');
+      if (saved) {
+        setPersona(JSON.parse(saved));
+      }
+    } catch {
+      // fallback
+    }
+  };
+
+  useEffect(() => {
+    loadPersona();
+    window.addEventListener('strata_persona_changed', loadPersona);
+    window.addEventListener('storage', loadPersona);
+    return () => {
+      window.removeEventListener('strata_persona_changed', loadPersona);
+      window.removeEventListener('storage', loadPersona);
+    };
+  }, []);
+
+  // Determine Nav Items based on Active End-User Persona (strictly unique hrefs)
+  const getNavItems = () => {
+    if (persona.id === 'mine-manager') {
+      return [
+        { id: 'dashboard', label: 'Mine Dashboard', href: '/mine/dashboard', icon: Home },
+        { id: 'compliance', label: 'Compliance Register', href: '/mine/compliance', icon: ClipboardList },
+        { id: 'staff', label: 'Staff & Appointments', href: '/mine/staff', icon: Users },
+        { id: 'capas', label: 'CAPA Management', href: '/mine/capas', icon: ShieldCheck },
+        { id: 'contractors', label: 'Contractors', href: '/mine/contractors', icon: Briefcase },
+        { id: 'inspections', label: 'Inspections & Audit', href: '/mine/inspections', icon: Search },
+        { id: 'gis-map', label: 'GIS Mining Map', href: '/field/map', icon: MapPin },
+        { id: 'documents', label: 'Mine Documents', href: '/field/documents', icon: FileText },
+        { id: 'notifications', label: 'Notifications', href: '#', icon: Bell, isNotificationTrigger: true },
+      ];
+    }
+
+    if (persona.id === 'engineer-supervisor') {
+      return [
+        { id: 'dashboard', label: 'Assets & HEMM', href: '/field/assets', icon: Wrench },
+        { id: 'findings', label: 'Asset Findings', href: '/field/assets/findings', icon: AlertTriangle },
+        { id: 'gis-map', label: 'GIS Map', href: '/field/map', icon: MapPin },
+        { id: 'notifications', label: 'Notifications', href: '#', icon: Bell, isNotificationTrigger: true },
+      ];
+    }
+
+    if (persona.id === 'labour-officer') {
+      return [
+        { id: 'dashboard', label: 'Attendance & Roster', href: '/field/attendance', icon: Home },
+        { id: 'obligations', label: 'Labour Obligations', href: '/field/obligations', icon: ClipboardList },
+        { id: 'grievances', label: 'Grievance Intake', href: '/field/grievances', icon: MessageSquare },
+        { id: 'documents', label: 'Labour Registers', href: '/field/labour/documents', icon: FileText },
+        { id: 'notifications', label: 'Notifications', href: '#', icon: Bell, isNotificationTrigger: true },
+      ];
+    }
+
+    if (persona.id === 'env-officer') {
+      return [
+        { id: 'dashboard', label: 'Environmental Dashboard', href: '/field/environment', icon: Home },
+        { id: 'inspections', label: 'Inspections', href: '/field/inspections', icon: Search },
+        { id: 'defects', label: 'Environmental Findings', href: '/field/findings', icon: AlertTriangle },
+        { id: 'obligations', label: 'EC Obligations', href: '/field/obligations', icon: ClipboardList },
+        { id: 'evidence', label: 'Clearances & Documents', href: '/field/environment/documents', icon: Folder },
+        { id: 'gis-map', label: 'GIS Mining Map', href: '/field/map', icon: MapPin },
+        { id: 'notifications', label: 'Notifications', href: '#', icon: Bell, isNotificationTrigger: true },
+      ];
+    }
+
+    if (persona.id === 'safety-officer') {
+      return [
+        { id: 'dashboard', label: 'Safety Dashboard', href: '/field/safety/dashboard', icon: Home },
+        { id: 'inspections', label: 'Safety Inspections', href: '/field/inspections', icon: Search },
+        { id: 'defects', label: 'Defects & Findings', href: '/field/findings', icon: AlertTriangle },
+        { id: 'obligations', label: 'Safety Obligations', href: '/field/obligations', icon: ClipboardList },
+        { id: 'evidence', label: 'Safety Documents & Evidence', href: '/field/safety/documents', icon: Folder },
+        { id: 'gis-map', label: 'GIS Map', href: '/field/map', icon: MapPin },
+        { id: 'notifications', label: 'Notifications', href: '#', icon: Bell, isNotificationTrigger: true },
+      ];
+    }
+
+    // Default Field Inspector / Other Field Users
+    return [
+      { id: 'dashboard', label: 'Dashboard (My Queue)', href: '/field/dashboard', icon: Home },
+      { id: 'inspections', label: 'Inspections', href: '/field/inspections', icon: Search },
+      { id: 'defects', label: 'Defects & Findings', href: '/field/findings', icon: AlertTriangle },
+      { id: 'obligations', label: 'Obligations', href: '/field/obligations', icon: ClipboardList },
+      { id: 'documents', label: 'Documents', href: '/field/documents', icon: FileText },
+      { id: 'gis-map', label: 'GIS Map', href: '/field/map', icon: MapPin },
+      { id: 'notifications', label: 'Notifications', href: '#', icon: Bell, isNotificationTrigger: true },
+    ];
+  };
+
+  const navItems = getNavItems();
 
   return (
     <>
@@ -62,16 +159,16 @@ export function Sidebar({
           <div className="bg-white border border-slate-300 rounded p-2.5 text-xs space-y-1">
             <div className="flex items-center gap-1.5 font-bold text-slate-900">
               <span className="w-2 h-2 rounded-full bg-emerald-600 shrink-0" />
-              <span>Er. Rajesh Verma</span>
+              <span>{persona.name}</span>
             </div>
             <div className="text-slate-700 font-medium pl-3.5">
-              Safety Officer
+              {persona.postTitle}
             </div>
-            <div className="text-slate-600 pl-3.5">
-              Gevra OCP (SECL)
+            <div className="text-slate-600 pl-3.5 text-[11px]">
+              {persona.scope}
             </div>
             <div className="text-slate-500 text-[11px] pt-1 border-t border-slate-200 pl-3.5">
-              Appt: <span className="font-mono text-slate-700">01 Apr 2024 – 31 Mar 2027</span>
+              Appt: <span className="font-mono text-slate-700">{persona.appointmentPeriod}</span>
             </div>
           </div>
         </div>
@@ -79,16 +176,19 @@ export function Sidebar({
         {/* Navigation Items List with Next.js Links */}
         <nav className="flex-1 overflow-y-auto py-2 divide-y divide-slate-100">
           <div className="px-2 space-y-0.5">
-            {NAV_ITEMS.map((item) => {
+            {navItems.map((item) => {
               const Icon = item.icon;
+              
+              // Exact active matching with unique paths
               const isActive = item.href !== '#' && (
-                item.href === '/field/dashboard'
-                  ? pathname === '/field/dashboard'
-                  : item.href === '/field/documents'
-                  ? pathname === '/field/documents'
-                  : item.href === '/field/safety/documents'
-                  ? pathname === '/field/safety/documents'
-                  : pathname?.startsWith(item.href)
+                pathname === item.href ||
+                (item.href !== '/field/dashboard' &&
+                 item.href !== '/mine/dashboard' &&
+                 item.href !== '/field/safety/dashboard' &&
+                 item.href !== '/field/environment' &&
+                 item.href !== '/field/attendance' &&
+                 item.href !== '/field/assets' &&
+                 pathname?.startsWith(item.href))
               );
 
               if (item.isNotificationTrigger) {
@@ -126,7 +226,7 @@ export function Sidebar({
 
         {/* Official Statutory Footer */}
         <div className="p-3 bg-slate-100 border-t border-slate-300 text-[11px] text-slate-600 flex items-center justify-between">
-          <span>DGMS Form B Scope</span>
+          <span>DGMS Statutory System</span>
           <span className="text-slate-400 font-mono">v1.0</span>
         </div>
       </aside>
